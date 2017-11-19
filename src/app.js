@@ -10,6 +10,8 @@ const configuration = require('feathers-configuration');
 const hooks = require('feathers-hooks');
 const rest = require('feathers-rest');
 
+const auth = require('feathers-authentication');
+const passportApiKey = require('./strategy/api-key');
 
 const handler = require('feathers-errors/handler');
 const notFound = require('feathers-errors/not-found');
@@ -39,6 +41,12 @@ app.configure(rest());
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
+// authentication
+app.configure(auth({ secret: '-' }));
+app.configure(passportApiKey({
+  header: 'x-api-key',
+  allowedKeys: ['opensesame']
+}));
 // Set up our services (see `services/index.js`)
 app.configure(services);
 // Configure a middleware for 404s and the error handler
