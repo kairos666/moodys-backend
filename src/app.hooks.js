@@ -1,7 +1,7 @@
 // Application hooks that run for every service
 const logger = require('./hooks/logger');
-
 const apiAuthenticate = require('./hooks/api-authenticate');
+const errorHandler = require('./hooks/error-handler');
 
 module.exports = {
   before: {
@@ -25,7 +25,7 @@ module.exports = {
   },
 
   error: {
-    all: [ logger() ],
+    all: [ errorHandler() ],
     find: [],
     get: [],
     create: [],

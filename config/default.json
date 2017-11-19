@@ -7,10 +7,17 @@
     "max": 50
   },
   "push-notification": {
-    "app-whitelist": ["*"], 
     "vapidKeys": { 
       "publicKey": "BFx9xYoe2fg5q3j0GUTgbL59MdxMmOIdX0KTRYpntTnIKaZCH0YIObpCo71sX8PiEkliXeYQtQeHZl_PxmC-bYA", 
       "privateKey": "0wKv3L9D6GWZTF3ebsuOKvaqtVbhkkOARS_hA93-My8" 
     } 
+  },
+  "authentication": {
+    "secret": "-",
+    "strategies": [ "apiKey" ],
+    "apiKey": {
+      "header": "x-api-key",
+      "allowedKeys": [ "opensesame" ]
+    }
   }
 }
