@@ -29,6 +29,7 @@
     "mocha": "mocha test/ --recursive --exit"
   },
   "dependencies": {
+    "ajv": "^5.4.0",
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
     "cors": "^2.8.4",

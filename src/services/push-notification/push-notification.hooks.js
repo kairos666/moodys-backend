@@ -1,11 +1,13 @@
 
 
+const notificationValidator = require('../../hooks/notification-validator');
+
 module.exports = {
   before: {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [ notificationValidator() ],
     update: [],
     patch: [],
     remove: []
