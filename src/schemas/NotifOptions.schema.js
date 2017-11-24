@@ -6,6 +6,6 @@ const NotifOptions = {
     body: { type: 'string' },
     tag: { type: 'string' }
   }
-}
+};
 
 module.exports = NotifOptions;

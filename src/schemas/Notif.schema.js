@@ -5,6 +5,6 @@ const Notif = {
     options: { $ref: 'NotifOptions', type: 'object' }
   },
   required: ['title']
-}
+};
 
 module.exports = Notif;
