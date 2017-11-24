@@ -4,30 +4,14 @@ const logger = require('winston');
 const errors = require('feathers-errors'); 
 const Ajv = require('ajv');
 
+// schemes
+const Notif = require('../schemas/Notif.schema');
+const NotifOptions = require('../schemas/NotifOptions.schema');
+
 module.exports = function (options = {}) { // eslint-disable-line no-unused-vars
   return function notificationValidator (hook) {
     // Hooks can either return nothing or a promise
     // that resolves with the `hook` object for asynchronous operations
-
-    // Schemes
-    const Notif = {
-      $id: 'Notif',
-      properties: {
-        title: { type: 'string' },
-        options: { $ref: 'NotifOptions', type: 'object' }
-      },
-      required: ['title']
-    }
-
-    const NotifOptions = {
-      $id: 'NotifOptions',
-      properties: {
-        badge: { type: 'string', format: 'uri-template' },
-        icon: { type: 'string', format: 'uri-template' },
-        body: { type: 'string' },
-        tag: { type: 'string' }
-      }
-    }
 
     // init JSON schema validator (adding necessary sub schemes)
     const ajv = new Ajv();
