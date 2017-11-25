@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "ajv": "^5.4.0",
+    "axios": "^0.17.1",
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
     "cors": "^2.8.4",
@@ -50,7 +51,7 @@
     "eslint": "^4.8.0",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "request": "^2.83.0"
   }
 }
