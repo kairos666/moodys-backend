@@ -6,10 +6,12 @@ const filters = require('./push-notification.filters');
 module.exports = function () {
   const app = this;
   const paginate = app.get('paginate');
+  const pushConfig = app.get('push-notification');
 
   const options = {
     name: 'push-notification',
-    paginate
+    paginate,
+    pushConfig
   };
 
   // Initialize our service with any options it requires
