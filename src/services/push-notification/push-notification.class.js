@@ -72,8 +72,14 @@ class Service {
     console.log('payload', encryptedPayload);
     console.log('requets details', requestDetails);
 
+    const objectPayload = {
+      body: 'my fucking payloaf for notification',
+      tag: 'pouet',
+      stuff: 'pouet'
+    }
+
     // execute push notification
-    return this.webpush.sendNotification(subscription, 'my fucking payloaf for notification').then(resp => {
+    return this.webpush.sendNotification(subscription, JSON.stringify(objectPayload)).then(resp => {
       return Promise.resolve(resp);
     }).catch(error => {
       return Promise.reject(new errors.GeneralError('FCM error', error));
