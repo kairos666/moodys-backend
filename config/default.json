@@ -21,5 +21,17 @@
       "header": "x-api-key",
       "allowedKeys": [ "opensesame" ]
     }
+  },
+  "firebaseDB": {
+    "firebaseConfig": {
+      "apiKey": "AIzaSyD9XdghOe4dGAeA4tiJ83Bu0CnUpnO5UMw",
+      "authDomain": "moodies-1ad4f.firebaseapp.com",
+      "databaseURL": "https://moodies-1ad4f.firebaseio.com",
+      "storageBucket": "moodies-1ad4f.appspot.com"
+    },
+    "firebaseSubscriptionsAuth": {
+      "email": "<dedicated user email>",
+      "password": "<dedicated user password>"
+    }
   }
 }
