@@ -5,7 +5,7 @@ class Service {
   }
 
   find (params) {
-    return Promise.resolve(['got data', params]);
+    return this.options.pGetAllSubscriptions();
   }
 }
 
