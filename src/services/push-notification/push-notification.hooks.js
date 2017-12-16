@@ -2,12 +2,14 @@
 const apiAuthenticate = require('../../hooks/api-authenticate');
 const notificationValidator = require('../../hooks/notification-validator');
 
+const populateSubsrciptions = require('../../hooks/populate-subsrciptions');
+
 module.exports = {
   before: {
-    all: [ apiAuthenticate() ],
+    all: [apiAuthenticate()],
     find: [],
     get: [],
-    create: [ notificationValidator() ],
+    create: [ notificationValidator(), populateSubsrciptions() ],
     update: [],
     patch: [],
     remove: []
