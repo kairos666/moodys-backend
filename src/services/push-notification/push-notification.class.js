@@ -2,14 +2,8 @@
 const webpush = require('web-push');
 const url = require('url');
 const errors = require('feathers-errors');
-
-const subscription = {
-  endpoint: 'https://fcm.googleapis.com/fcm/send/fYwntmnmBdQ:APA91bEmrnbt0SSfK1xa2wXvgW3c21DUvvIsEvqg_3J9S_LRRVIyeWT7jUXV9RXg_4j2r1U74CO2J53IOl9TqXibhAbsGDCo908X5n7VndEJT1riB3GD_a0_exj19Perhq_8l3lHeuub',
-  keys: {
-    auth: 'MCWHEreX4-rccxOuFSK9TQ==',
-    p256dh: 'BFwD9P75z91H163ij0QVMVMbTjaUCb9aqiigUy-M_X29K6seFBNtxrzgI32yvv3RyAPs_c_UJarfdaoS-ucfpQI='
-  }
-}
+const axios = require('axios');
+const logger = require('winston');
 
 class Service {
   constructor (options) {
@@ -26,63 +20,87 @@ class Service {
   }
 
   create (data, params) {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current)));
-    }
+    // format subscriptions array
+    let subscriptions = Object.keys(data.subscriptions).map(uid => {
+      return {
+        notification: data.notification,
+        subscription: data.subscriptions[uid]
+      }
+    });
 
-    // const urlsafeBase64 = require('urlsafe-base64');
-    // const decodedVapidPublicKey = urlsafeBase64.decode('BFx9xYoe2fg5q3j0GUTgbL59MdxMmOIdX0KTRYpntTnIKaZCH0YIObpCo71sX8PiEkliXeYQtQeHZl_PxmC-bYA');
-    // console.log('this to be used in subscription in the browser', new Uint8Array(decodedVapidPublicKey));
+    // generate request details out of notification data, subscriptions and config
+    let preparePushNotif = (pushData, subscription) => {
+      let requestDetails;
+      try {
+        requestDetails = this.webpush.generateRequestDetails(
+          subscription,
+          pushData,
+          {
+            gcmAPIKey: this.options.pushConfig.gcm_sender_id,
+            vapidDetails: {
+              subject: this.options.pushConfig.subject,
+              publicKey: this.options.pushConfig.vapidKeys.publicKey,
+              privateKey: this.options.pushConfig.vapidKeys.privateKey
+            },
+            TTL: 60
+          }
+        );
+      } catch (error) {
+        return Promise.reject(new errors.GeneralError('generating push notification request error', error));
+      }
 
-    const parsedUrl = url.parse(subscription.endpoint);
-    const audience = `${parsedUrl.protocol}//${parsedUrl.hostname}`;
-    const headers = this.webpush.getVapidHeaders(
-      audience,
-      this.options.pushConfig.subject,
-      this.options.pushConfig.vapidKeys.publicKey,
-      this.options.pushConfig.vapidKeys.privateKey
-    );
+      return Promise.resolve(requestDetails);
+    };
 
-    const encryptedPayload = this.webpush.encrypt(
-      subscription.keys.p256dh,
-      subscription.keys.auth,
-      'my fucking payloaf for notification'
-    );
+    // execute push request according to request details
+    let executePush = (requestDetails) => {
+      // adapt requestDetails to axiosOptions
+      let adaptedRequestDetailsToAxios = {
+        url: requestDetails.endpoint,
+        headers: requestDetails.headers,
+        method: requestDetails.method,
+        data: requestDetails.body
+      };
 
-    let requestDetails;
-    try {
-      requestDetails = this.webpush.generateRequestDetails(
-        subscription,
-        'my fucking payloaf for notification',
-        {
-          gcmAPIKey: this.options.pushConfig.gcm_sender_id,
-          vapidDetails: {
-            subject: this.options.pushConfig.subject,
-            publicKey: this.options.pushConfig.vapidKeys.publicKey,
-            privateKey: this.options.pushConfig.vapidKeys.privateKey
-          },
-          TTL: 60
+      return axios.request(adaptedRequestDetailsToAxios);
+    };
+
+    // wait for all push requests to be resolved
+    let promiseAllSoftFail = function(promisesArray) {
+      let promisesFormatedArray = promisesArray.map(p => p.catch(e => e)); 
+      return Promise.all(promisesFormatedArray);
+    };
+
+    // generate promise for all notificatons to be fired
+    let pushPromisesArray = subscriptions.map(wp => preparePushNotif(wp.notification, wp.subscription).then(reqDetails => executePush(reqDetails)));
+    return promiseAllSoftFail(pushPromisesArray).then(results => {
+      let filteredResults = results.map(response => {
+        // filter only useful information
+        if (response.status === 200 || response.status === 201) {
+          return { status: response.status, statusText: response.statusText };
+        } else {
+          return { status: response.response.status, statusText: response.response.statusText };
         }
-      );
-    } catch (error) {
-      return Promise.reject(new errors.GeneralError('generating push notification request error', error));
-    }
+      });
 
-    console.log('headers', headers);
-    console.log('payload', encryptedPayload);
-    console.log('requets details', requestDetails);
+      let groomedResults = {
+        totalPush: filteredResults.length,
+        totalSuccesssfulPush: filteredResults.filter(resp => (resp.status === 200 || resp.status === 201)).length,
+        totalFailedPush: filteredResults.filter(resp => (resp.status !== 200 && resp.status !== 201)).length,
+        FCMresponseDetails: filteredResults
+      };
+      logger.debug(groomedResults);
 
-    const objectPayload = {
-      body: 'my fucking payloaf for notification',
-      tag: 'pouet',
-      stuff: 'pouet'
-    }
-
-    // execute push notification
-    return this.webpush.sendNotification(subscription, JSON.stringify(objectPayload)).then(resp => {
-      return Promise.resolve(resp);
-    }).catch(error => {
-      return Promise.reject(new errors.GeneralError('FCM error', error));
+      /**
+       * service call end result
+       * 
+       * if at least one push message went through it is a success, otherwise it failed
+       **/
+      if (groomedResults.totalPush === groomedResults.totalFailedPush) {
+        return Promise.reject(new errors.GeneralError('FCM push server error - no push call have succedeed', groomedResults));
+      } else {
+        return Promise.resolve(groomedResults);
+      }
     });
   }
 }
