@@ -22,7 +22,7 @@ module.exports = function () {
         reject(error);
       });
     });
-  }
+  };
   // authenticate (user account with access rights for all users registered subscriptions)
   const firebaseAuth = firebase.auth(firebaseApp);
   firebaseAuth.signInWithEmailAndPassword(firebaseConfig.firebaseSubscriptionsAuth.email, firebaseConfig.firebaseSubscriptionsAuth.password).catch(err => {

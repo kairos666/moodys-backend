@@ -25,7 +25,7 @@ class Service {
       return {
         notification: data.notification,
         subscription: data.subscriptions[uid]
-      }
+      };
     });
 
     // generate request details out of notification data, subscriptions and config
