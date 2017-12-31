@@ -21,12 +21,15 @@ class Service {
 
   create (data, params) {
     // format subscriptions array
-    let subscriptions = Object.keys(data.subscriptions).map(uid => {
-      return {
-        notification: data.notification,
-        subscription: data.subscriptions[uid]
-      };
+    let tempSubscriptions = Object.keys(data.subscriptions).map(uid => {
+      return Object.keys(data.subscriptions[uid]).map(fingerprint => {
+        return {
+          notification: data.notification,
+          subscription: data.subscriptions[uid][fingerprint]
+        };
+      });
     });
+    let subscriptions = [].concat(...tempSubscriptions);
 
     // generate request details out of notification data, subscriptions and config
     let preparePushNotif = (pushData, subscription) => {
