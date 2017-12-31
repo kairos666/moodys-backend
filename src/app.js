@@ -17,10 +17,27 @@ const authentication = require('./authentication');
 
 const app = feathers();
 
+/**
+ * Apply CORS rules
+ * dev whitelist is large
+ * prod whitelist is narrow
+ */
+const corsWhitelist = configuration()().cors.whitelist;
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (corsWhitelist.indexOf(origin) !== -1 || corsWhitelist.indexOf('*') !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
 // Load app configuration
 app.configure(configuration());
 // Enable CORS, security, compression, favicon and body parsing
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(compress());
 app.use(bodyParser.json());

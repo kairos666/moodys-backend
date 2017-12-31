@@ -22,8 +22,8 @@
       "allowedKeys": [ "opensesame" ]
     }
   },
-  "firebaseDB": {
-    "firebaseConfig": {
+  "firebase": {
+    "firebaseAppConfig": {
       "apiKey": "AIzaSyD9XdghOe4dGAeA4tiJ83Bu0CnUpnO5UMw",
       "authDomain": "moodies-1ad4f.firebaseapp.com",
       "databaseURL": "https://moodies-1ad4f.firebaseio.com",
@@ -33,5 +33,8 @@
       "email": "<dedicated user email>",
       "password": "<dedicated user password>"
     }
+  },
+  "cors": {
+    "whitelist": ["*"]
   }
 }

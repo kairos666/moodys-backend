@@ -1,4 +1,7 @@
 {
   "host": "moodys-backend-app.com",
-  "port": "PORT"
+  "port": "PORT",
+  "cors": {
+    "whitelist": ["https://moodies-1ad4f.firebaseapp.com/"]
+  }
 }
