@@ -20,15 +20,17 @@ class Service {
   }
 
   create (data, params) {
-    // format subscriptions array
-    let tempSubscriptions = Object.keys(data.subscriptions).map(uid => {
-      return Object.keys(data.subscriptions[uid]).map(fingerprint => {
-        return {
-          notification: data.notification,
-          subscription: data.subscriptions[uid][fingerprint]
-        };
+    // format subscriptions array and filter out subscription(s) from caller
+    let tempSubscriptions = Object.keys(data.subscriptions)
+      .filter(uid => (uid !== JSON.parse(data.notification).options.data.uid))
+      .map(uid => {
+        return Object.keys(data.subscriptions[uid]).map(fingerprint => {
+          return {
+            notification: data.notification,
+            subscription: data.subscriptions[uid][fingerprint]
+          };
+        });
       });
-    });
     let subscriptions = [].concat(...tempSubscriptions);
 
     // generate request details out of notification data, subscriptions and config
