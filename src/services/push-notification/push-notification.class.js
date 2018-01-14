@@ -101,8 +101,10 @@ class Service {
        * 
        * if at least one push message went through it is a success, otherwise it failed
        **/
-      if (groomedResults.totalPush === groomedResults.totalFailedPush) {
+      if (groomedResults.totalPush === groomedResults.totalFailedPush && groomedResults.totalPush !== 0) {
         return Promise.reject(new errors.GeneralError('FCM push server error - no push call have succedeed', groomedResults));
+      } else if(groomedResults.totalPush === 0) {
+        return Promise.resolve('Moody\'s backend error - no valid push subscriptions found');
       } else {
         return Promise.resolve(groomedResults);
       }
