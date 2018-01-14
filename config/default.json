@@ -1,0 +1,40 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "push-notification": {
+    "vapidKeys": { 
+      "publicKey": "BFx9xYoe2fg5q3j0GUTgbL59MdxMmOIdX0KTRYpntTnIKaZCH0YIObpCo71sX8PiEkliXeYQtQeHZl_PxmC-bYA", 
+      "privateKey": "0wKv3L9D6GWZTF3ebsuOKvaqtVbhkkOARS_hA93-My8" 
+    },
+    "gcm_sender_id": "103953800507",
+    "subject": "mailto:moody@capsulecorp.org"
+  },
+  "authentication": {
+    "secret": "-",
+    "strategies": [ "apiKey" ],
+    "apiKey": {
+      "header": "x-api-key",
+      "allowedKeys": [ "opensesame" ]
+    }
+  },
+  "firebase": {
+    "firebaseAppConfig": {
+      "apiKey": "AIzaSyD9XdghOe4dGAeA4tiJ83Bu0CnUpnO5UMw",
+      "authDomain": "moodies-1ad4f.firebaseapp.com",
+      "databaseURL": "https://moodies-1ad4f.firebaseio.com",
+      "storageBucket": "moodies-1ad4f.appspot.com"
+    },
+    "firebaseSubscriptionsAuth": {
+      "email": "<dedicated user email>",
+      "password": "<dedicated user password>"
+    }
+  },
+  "cors": {
+    "whitelist": ["*"]
+  }
+}
