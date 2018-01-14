@@ -47,7 +47,7 @@ class Service {
               publicKey: this.options.pushConfig.vapidKeys.publicKey,
               privateKey: this.options.pushConfig.vapidKeys.privateKey
             },
-            TTL: 60
+            TTL: 60 * 60
           }
         );
       } catch (error) {
