@@ -20,9 +20,17 @@ class Service {
   }
 
   create (data, params) {
+    // get sender UID
+    let notifContent = (data && data.notification) 
+      ? JSON.parse(data.notification) 
+      : {};
+    let senderUID = (notifContent.options && notifContent.options.data && notifContent.options.data.uid)
+      ? notifContent.options.data.uid
+      : '<missing sender uid>';
+
     // format subscriptions array and filter out subscription(s) from caller
     let tempSubscriptions = Object.keys(data.subscriptions)
-      .filter(uid => (uid !== JSON.parse(data.notification).options.data.uid))
+      .filter(uid => (uid !== senderUID))
       .map(uid => {
         return Object.keys(data.subscriptions[uid]).map(fingerprint => {
           return {
@@ -102,10 +110,17 @@ class Service {
        * if at least one push message went through it is a success, otherwise it failed
        **/
       if (groomedResults.totalPush === groomedResults.totalFailedPush && groomedResults.totalPush !== 0) {
+        logger.info(`[Push Notification service] - ${new Date().toString()} - Message from UID: ${senderUID} couldn't be delivered, reason: failed pushes`, groomedResults);
         return Promise.reject(new errors.GeneralError('FCM push server error - no push call have succedeed', groomedResults));
       } else if(groomedResults.totalPush === 0) {
+        logger.info(`[Push Notification service] - ${new Date().toString()} - Message from UID: ${senderUID} couldn't be delivered, reason: no valid subscriptions`, groomedResults);
         return Promise.resolve('Moody\'s backend error - no valid push subscriptions found');
       } else {
+        if (groomedResults.totalFailedPush === 0) {
+          logger.info(`[Push Notification service] - ${new Date().toString()} - Message from UID: ${senderUID} delivered to all subscribed sources`, groomedResults);
+        } else {
+          logger.info(`[Push Notification service] - ${new Date().toString()} - Message from UID: ${senderUID} delivered to part of subscribed sources`, groomedResults);
+        }
         return Promise.resolve(groomedResults);
       }
     });
