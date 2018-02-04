@@ -2,6 +2,9 @@
 
 > simple push notification backend service
 
+- CORS
+- API key authentication
+
 ## About
 
 This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
