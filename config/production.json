@@ -1,7 +1,29 @@
 {
-  "host": "moodys-backend-app.com",
-  "port": "PORT",
+  "authentication": {
+    "apiKey": {
+      "allowedKeys": [ "ALLOWED_KEY" ]
+    }
+  },
+  "push-notification": {
+    "vapidKeys": { 
+      "publicKey": "VAPID_PUBLIC_KEY", 
+      "privateKey": "VAPID_PRIVATE_KEY" 
+    },
+    "subject": "PUSH_SUBJECT"
+  },
+  "firebase": {
+    "firebaseAppConfig": {
+      "apiKey": "FB_API_KEY",
+      "authDomain": "FB_AUTH_DOMAIN",
+      "databaseURL": "FB_DB_URL",
+      "storageBucket": "FB_STORAGE_URL"
+    },
+    "firebaseSubscriptionsAuth": {
+      "email": "FB_BACKEND_LOGIN", 
+      "password": "FB_BACKEND_PWD"
+    }
+  },
   "cors": {
-    "whitelist": ["https://moodies-1ad4f.firebaseapp.com/"]
+    "whitelist": ["ALLOWED_DOMAIN"]
   }
 }

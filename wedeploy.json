@@ -1,4 +1,18 @@
 {
-	"id": "notifications",
-	"port": 3030
+	"id": "push",
+	"port": 3030,
+	"env": {
+		"NODE_ENV": "production",
+		"ALLOWED_KEY": "<moodys backend API key>",
+		"ALLOWED_DOMAIN": "<moodys backend CORS allowed domain>",
+		"FB_BACKEND_LOGIN": "<firebase account login with read access on subscriptions for web push>",
+		"FB_BACKEND_PWD": "<firebase account password with read access on subscriptions for web push>",
+		"FB_API_KEY": "<firebase node api key>",
+		"FB_AUTH_DOMAIN": "<firebase authorization domain>",
+		"FB_DB_URL": "<firebase database base URL>",
+		"FB_STORAGE_URL": "<firebase storage bucket URL>",
+		"VAPID_PUBLIC_KEY": "<VAPID public key>",
+		"VAPID_PRIVATE_KEY": "<VAPID private key>",
+		"PUSH_SUBJECT": "<push notifications contact mail or website>"
+	}
 }
