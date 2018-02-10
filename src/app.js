@@ -14,6 +14,7 @@ const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 const authentication = require('./authentication');
+const swagger = require('feathers-swagger'); 
 
 const app = feathers();
 
@@ -50,6 +51,15 @@ app.use('/', feathers.static(app.get('public')));
 app.configure(hooks());
 app.configure(rest());
 
+// Set up swagger UI docs
+app.configure(swagger({ 
+  docsPath: '/docs', 
+  uiIndex: path.join(__dirname, 'docs.html'), 
+  info: { 
+    title: 'moody\'s backend - push notification service', 
+    description: 'backend service for handling push notifications for moody\'s PWA application' 
+  } 
+})); 
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
@@ -57,6 +67,21 @@ app.configure(middleware);
 app.configure(authentication);
 // Set up our services (see `services/index.js`)
 app.configure(services);
+
+// remove unnecessary swagger docs
+const hiddenDocs = app.get('swagger').hiddenDocs;
+hiddenDocs.forEach(service => {
+  // hide endpoints
+  service.endpoints.forEach(endPoint => {
+    if (app.docs.paths[endPoint]) delete app.docs.paths[endPoint];
+  });
+  
+  // hide service (if all endpoints are ignored, hide the collapse menu entirely)
+  if (service.fullServiceHidden) {
+    app.docs.tags = app.docs.tags.filter(tag => (service.serviceName !== tag.name));
+  }
+});
+
 // Configure a middleware for 404s and the error handler
 app.use(notFound());
 app.use(handler());

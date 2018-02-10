@@ -13,9 +13,30 @@ module.exports = function () {
     paginate,
     pushConfig
   };
+  const pushService = createService(options);
+
+  // swagger spec for this service
+  pushService.docs = { 
+    create: { 
+      parameters: [ 
+        { 
+          description: 'push notification payload', 
+          in: 'body', 
+          name: 'payload', 
+          type: 'object' 
+        }, 
+        { 
+          description: 'push notification parameters', 
+          in: 'query', 
+          name: '$someParam', 
+          type: 'string' 
+        } 
+      ] 
+    } 
+  };
 
   // Initialize our service with any options it requires
-  app.use('/push-notification', createService(options));
+  app.use('/push-notification', pushService);
 
   // Get our initialized service so that we can register hooks and filters
   const service = app.service('push-notification');
