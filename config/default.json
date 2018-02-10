@@ -36,5 +36,11 @@
   },
   "cors": {
     "whitelist": ["*"]
+  },
+  "swagger": {
+    "hiddenDocs": [
+      { "serviceName": "authentication", "fullServiceHidden": true, "endpoints": ["/authentication", "/authentication/{id}"] },
+      { "serviceName": "subscriptions", "fullServiceHidden": true, "endpoints": ["/subscriptions"] }
+    ]
   }
 }
