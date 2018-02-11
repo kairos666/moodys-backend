@@ -24,6 +24,6 @@
     }
   },
   "cors": {
-    "whitelist": ["ALLOWED_DOMAIN"]
+    "whitelist": "ALLOWED_DOMAIN"
   }
 }

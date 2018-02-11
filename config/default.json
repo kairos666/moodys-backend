@@ -35,7 +35,7 @@
     }
   },
   "cors": {
-    "whitelist": ["*"]
+    "whitelist": "*"
   },
   "swagger": {
     "hiddenDocs": [
