@@ -1,6 +1,6 @@
 {
 	"id": "push",
-	"port": 3030,
+	"port": 80,
 	"env": {
 		"NODE_ENV": "production",
 		"ALLOWED_KEY": "<moodys backend API key>",
