@@ -4,7 +4,8 @@ const NotifOptions = {
     badge: { type: 'string', format: 'uri-template' },
     icon: { type: 'string', format: 'uri-template' },
     body: { type: 'string' },
-    tag: { type: 'string' }
+    tag: { type: 'string' },
+    data: { type: 'object' }
   }
 };
 
