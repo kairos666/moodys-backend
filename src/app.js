@@ -53,12 +53,41 @@ app.configure(rest());
 
 // Set up swagger UI docs
 app.configure(swagger({ 
+  swagger: '2.0',
   docsPath: '/docs', 
   uiIndex: path.join(__dirname, 'docs.html'), 
   info: { 
     title: 'moody\'s backend - push notification service', 
     description: 'backend service for handling push notifications for moody\'s PWA application' 
-  } 
+  },
+  schemes: ['https'],
+  definitions: {
+    Notif: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', description: 'notification title', example: 'my notif title' },
+        options: { $ref: '#/definitions/NotifOptions', type: 'object' }
+      },
+      required: ['title']
+    },
+    NotifOptions: {
+      type: 'object',
+      properties: {
+        badge: { type: 'string', format: 'uri-template', description: 'notification OS icon (e.g. mobile marker)', example: 'static/notification-badge.png' },
+        icon: { type: 'string', format: 'uri-template', description: 'notification icon (part of notification content)', example: 'static/notification-icon.png' },
+        body: { type: 'string', description: 'notification body copy (part of notification content)', example: 'my notif content text' },
+        tag: { type: 'string', description: 'notification tag, allow specific behaviors (ex: merging of related notifications)', example: 'test-notif' },
+        data: { type: 'object', description: 'additional custom information to be passed along with the notification' }
+      }
+    }
+  },
+  securityDefinitions: {
+    ApiKeyAuth:{
+      type: 'apiKey',
+      name: 'x-api-key',
+      in: 'header'
+    }
+  }
 })); 
 
 // Configure other middleware (see `middleware/index.js`)

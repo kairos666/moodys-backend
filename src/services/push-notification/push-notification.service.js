@@ -17,21 +17,21 @@ module.exports = function () {
 
   // swagger spec for this service
   pushService.docs = { 
-    create: { 
+    create: {
+      summary: 'generate a push notification to be sent to all subscribed users',
+      security: [ { ApiKeyAuth: []} ],
       parameters: [ 
         { 
           description: 'push notification payload', 
           in: 'body', 
-          name: 'payload', 
-          type: 'object' 
-        }, 
-        { 
-          description: 'push notification parameters', 
-          in: 'query', 
-          name: '$someParam', 
-          type: 'string' 
-        } 
-      ] 
+          name: 'notification payload',
+          description: `those information consist of the actual content of the notification that will be sent to subscribers ([related spec](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification))`,
+          required: true,
+          schema: {
+            $ref: '#/definitions/Notif'
+          }
+        }
+      ]
     } 
   };
 
