@@ -26,9 +26,14 @@ const app = feathers();
 const corsWhitelist = configuration()().cors.whitelist;
 const corsOptions = {
   origin: function (origin, callback) {
-    if (corsWhitelist.indexOf(origin) !== -1 || corsWhitelist.indexOf('*') !== -1) {
+    if (!origin) {
+      // self origin
+      callback(null, true);
+    } else if (corsWhitelist.indexOf(origin) !== -1 || corsWhitelist.indexOf('*') !== -1) {
+      // whitelisted origin
       callback(null, true);
     } else {
+      // reject in all other cases
       callback(new Error('Not allowed by CORS'));
     }
   },
