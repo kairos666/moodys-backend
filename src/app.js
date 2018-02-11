@@ -87,7 +87,12 @@ app.configure(swagger({
       name: 'x-api-key',
       in: 'header'
     }
-  }
+  },
+  security: [
+    {
+      ApiKeyAuth: []
+    }
+  ]
 })); 
 
 // Configure other middleware (see `middleware/index.js`)
