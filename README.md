@@ -1,4 +1,4 @@
-# moodys-backend
+# moodys-backend-push
 
 > simple push notification backend service
 
