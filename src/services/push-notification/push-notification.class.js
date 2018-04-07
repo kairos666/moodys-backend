@@ -33,8 +33,13 @@ class Service {
       .filter(uid => (uid !== senderUID))
       .map(uid => {
         return Object.keys(data.subscriptions[uid]).map(fingerprint => {
+
+          // build notification object with additional target uid for each push message
+          let processedNotif = Object.assign({}, JSON.parse(data.notification));
+          if (processedNotif.options && processedNotif.options.data) processedNotif.options.data.toUId = uid;
+
           return {
-            notification: data.notification,
+            notification: JSON.stringify(processedNotif),
             subscription: data.subscriptions[uid][fingerprint]
           };
         });
