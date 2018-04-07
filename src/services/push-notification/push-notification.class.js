@@ -29,6 +29,7 @@ class Service {
       : '<missing sender uid>';
 
     // format subscriptions array and filter out subscription(s) from caller
+    let sendingTimestamp = new Date().getTime();
     let tempSubscriptions = Object.keys(data.subscriptions)
       .filter(uid => (uid !== senderUID))
       .map(uid => {
@@ -36,7 +37,12 @@ class Service {
 
           // build notification object with additional target uid for each push message
           let processedNotif = Object.assign({}, JSON.parse(data.notification));
-          if (processedNotif.options && processedNotif.options.data) processedNotif.options.data.toUId = uid;
+          if (processedNotif.options && processedNotif.options.data) {
+            // add targeted user UID
+            processedNotif.options.data.toUId = uid;
+            // add time of push
+            processedNotif.options.data.pushTimestamp = sendingTimestamp;
+          }
 
           return {
             notification: JSON.stringify(processedNotif),
