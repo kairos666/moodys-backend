@@ -41,7 +41,7 @@ class Service {
           let processedNotif = Object.assign({}, JSON.parse(data.notification));
           if (processedNotif.options && processedNotif.options.data) {
             // add targeted user UID
-            processedNotif.options.data.toUId = uid;
+            processedNotif.options.data.toUid = uid;
             // add time of push
             processedNotif.options.data.pushTimestamp = sendingTimestamp;
           }
