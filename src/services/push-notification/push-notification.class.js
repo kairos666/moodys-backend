@@ -101,8 +101,7 @@ class Service {
     let pushPromisesArray = (isTestCall) 
       ? subscriptions.map(wp => preparePushNotif(wp.notification, wp.subscription).then(reqDetails => Promise.resolve({ status: 201, statusText: 'mock push FCM calls' })))
       : subscriptions.map(wp => preparePushNotif(wp.notification, wp.subscription).then(reqDetails => executePush(reqDetails)));
-    console.log(isTestCall);
-    console.log(pushPromisesArray);
+
     return promiseAllSoftFail(pushPromisesArray).then(results => {
       let filteredResults = results.map(response => {
         // filter only useful information
