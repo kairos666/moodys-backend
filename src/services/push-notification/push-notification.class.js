@@ -20,6 +20,8 @@ class Service {
   }
 
   create (data, params) {
+    // is this a simple test (not actually executing the push)
+    let isTestCall = (params.query && params.query.test === 'true') ? true : false;
     // get sender UID
     let notifContent = (data && data.notification) 
       ? JSON.parse(data.notification) 
@@ -95,8 +97,12 @@ class Service {
       return Promise.all(promisesFormatedArray);
     };
 
-    // generate promise for all notificatons to be fired
-    let pushPromisesArray = subscriptions.map(wp => preparePushNotif(wp.notification, wp.subscription).then(reqDetails => executePush(reqDetails)));
+    // generate promise for all notificatons to be fired (or mock it if test call)
+    let pushPromisesArray = (isTestCall) 
+      ? subscriptions.map(wp => preparePushNotif(wp.notification, wp.subscription).then(reqDetails => Promise.resolve({ status: 201, statusText: 'mock push FCM calls' })))
+      : subscriptions.map(wp => preparePushNotif(wp.notification, wp.subscription).then(reqDetails => executePush(reqDetails)));
+    console.log(isTestCall);
+    console.log(pushPromisesArray);
     return promiseAllSoftFail(pushPromisesArray).then(results => {
       let filteredResults = results.map(response => {
         // filter only useful information
@@ -113,6 +119,8 @@ class Service {
         totalFailedPush: filteredResults.filter(resp => (resp.status !== 200 && resp.status !== 201)).length,
         FCMresponseDetails: filteredResults
       };
+      // if test call - send notifications content with the rest
+      if (isTestCall) groomedResults.notifications = subscriptions.map(subscription => JSON.parse(subscription.notification));
       logger.debug(groomedResults);
 
       /**
