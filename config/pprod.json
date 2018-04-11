@@ -1,0 +1,29 @@
+{
+  "authentication": {
+    "apiKey": {
+      "allowedKeys": [ "ALLOWED_KEY" ]
+    }
+  },
+  "push-notification": {
+    "vapidKeys": { 
+      "publicKey": "VAPID_PUBLIC_KEY", 
+      "privateKey": "VAPID_PRIVATE_KEY" 
+    },
+    "subject": "PUSH_SUBJECT"
+  },
+  "firebase": {
+    "firebaseAppConfig": {
+      "apiKey": "FB_API_KEY_PPROD",
+      "authDomain": "FB_AUTH_DOMAIN_PPROD",
+      "databaseURL": "FB_DB_URL_PPROD",
+      "storageBucket": "FB_STORAGE_URL_PPROD"
+    },
+    "firebaseSubscriptionsAuth": {
+      "email": "FB_BACKEND_LOGIN", 
+      "password": "FB_BACKEND_PWD"
+    }
+  },
+  "cors": {
+    "whitelist": "ALLOWED_DOMAIN_PPROD"
+  }
+}
